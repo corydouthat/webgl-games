@@ -1,2 +1,2 @@
-# webgl-games
-Contains shared code and sub-modules for various WebGL + JavaScript web games
+# planet-tanks
+Tanks or Planetary Annihilation style game set in space.
