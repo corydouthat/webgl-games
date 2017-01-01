@@ -3,24 +3,21 @@
 
 var textures = [];
 
-// InitTextures()
-// Load texture images and buffer
-function InitTextures()
+// LoadTexture()
+// Load texture image and buffer
+function LoadTexture(img_path)
 {
-    // Load regular textures
-    textures.push(LoadTexture("res/planet-tanks/background.png"));
-    textures.push(LoadTexture("res/planet-tanks/foreground.png"));
-    textures.push(LoadTexture("res/planet-tanks/foreground2.png"));
+    // Load regular texture
+    textures.push(LoadTextureImg(img_path));
 
     // Load alpha masks
     // TODO: special considerations for mask?
     // TODO: make editable?
-    textures.push(LoadTexture("res/mask.png"));
 }
 
 // LoadTexture()
 // Load a single image and create a texture from it
-function LoadTexture(src)
+function LoadTextureImg(src)
 {
     var index = gl.createTexture();
     // Create temporary blank texture until image loads

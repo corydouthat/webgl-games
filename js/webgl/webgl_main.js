@@ -49,8 +49,6 @@ function InitWebGL(canvas)
         return null;
     }
 
-	ResizeWebGL();
-
 	return gl;
 }
 

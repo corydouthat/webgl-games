@@ -30,8 +30,8 @@ function drawMeshObj(obj, shader_program)
     var tex_coord_attrib;
 
     // Object translation/rotation
-    mat3.fromRotation(m_matrix, obj.rot);
-    mat3.translate(m_matrix, m_matrix, obj.pos);
+    mat3.fromTranslation(m_matrix, obj.pos);
+    mat3.rotate(m_matrix, m_matrix, obj.rot);
     mat3.multiply(mv_matrix, mv_matrix, m_matrix);
 
     // Set mv_matrix uniform
@@ -79,10 +79,10 @@ Mesh.prototype.makeBoxMesh = function(vec_half_size)
 
     // Texture coordinates (UV) array
     var uv_array = [
-        1.0, 1.0,
-        0.0, 1.0,
+        1.0, 0.0,
         0.0, 0.0,
-        1.0, 0.0
+        0.0, 1.0,
+        1.0, 1.0
     ];
 
     // Element array

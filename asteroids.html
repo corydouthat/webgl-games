@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--
+Copyright 2016 Cory Douthat
+-->
+<html>
+    <head>
+    	<title>ASTEROIDS!!</title>
+    	<link rel="stylesheet" type="text/css" href="css/asteroids.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+        <script src="js/asteroids/main.js"></script>
+        <script src="js/asteroids/game.js"></script>
+        <script src="js/asteroids/input.js"></script>
+        <script src="js/math/gl-matrix/dist/gl-matrix.js"></script>
+        <script src="js/webgl/webgl_main.js"></script>
+        <script src="js/webgl/webgl_mesh_objs.js"></script>
+        <script src="js/webgl/webgl_pixelmaps.js"></script>
+        <script src="js/webgl/webgl_shaders.js"></script>
+        <script src="js/webgl/webgl_textures.js"></script>
+        <script src="js/math/linear.js"></script>
+        <script src="js/physics/physics.js"></script>
+        <script src="js/physics/ph_objects.js"></script>
+        <script src="js/physics/ph_forces.js"></script>
+        <script src="js/physics/ph_collision.js"></script>
+    </head>
+
+    <body onload="main('glcanvas')" onresize="ResizeCanvas('glcanvas')">
+        <!-- WebGL Canvas -->
+        <canvas id="glcanvas" width="800" height="600">
+            Your browser doesn't appear to support the
+            <code>&lt;canvas&gt;</code> element.
+        </canvas>
+    </body>
+
+
+	<!-- 2D Vertex Shader GLSL Code -->
+	<script id="shd_mesh_2d_vs" type="x-shader/x-vertex">
+        #version 100
+
+        uniform mat3 mv_matrix;         // model-view matrix
+
+        attribute vec2 a_vertex;        // vertex position (x, y, 0?)
+        attribute vec2 a_texcoord;      // texture coordinates
+
+        varying vec2 v_texcoord;        // Texture coordinate to fs
+
+        void main(void)
+        {
+            v_texcoord = a_texcoord;
+            gl_Position = vec4(mv_matrix * vec3(a_vertex,1.0), 1.0);
+        }
+	</script>
+
+	<!-- 2D Fragment Shader GLSL Code -->
+	<script id="shd_mesh_2d_fs" type="x-shader/x-fragment">
+		#version 100
+        precision mediump float;
+
+		uniform sampler2D t_diffuse;    // Diffuse texture sampler
+
+		varying vec2 v_texcoord;        // Texture coordinate from vertex
+
+		void main(void)
+		{
+            vec4 color = texture2D(t_diffuse, v_texcoord);
+            gl_FragColor = color;
+		}
+	</script>
+
+
+    <!-- 2D Pixelmap Vertex Shader GLSL Code -->
+    <script id="shd_pixelmap_2d_vs" type="x-shader/x-vertex">
+        #version 100
+
+        uniform mat3 mv_matrix;         // model-view matrix
+
+        attribute vec2 a_vertex;        // vertex position (x, y, 0?)
+        attribute vec2 a_texcoord;      // texture coordinates
+
+        varying vec2 v_texcoord;        // Texture coordinate to fs
+
+        void main(void)
+        {
+            v_texcoord = a_texcoord;
+            gl_Position = vec4(mv_matrix * vec3(a_vertex,1.0), 1.0);
+        }
+    </script>
+
+    <!-- 2D Pixelmap Fragment Shader GLSL Code -->
+    <script id="shd_pixelmap_2d_fs" type="x-shader/x-fragment">
+        #version 100
+        precision mediump float;
+
+        uniform sampler2D t_diffuse;    // Diffuse texture sampler
+        uniform sampler2D t_mask;       // Mask texture sampler
+
+        varying vec2 v_texcoord;        // Texture coordinate from Vertex
+
+        void main(void)
+        {
+            vec4 color = texture2D(t_diffuse, v_texcoord);
+            vec4 mask = texture2D(t_mask, v_texcoord);
+            vec4 frag_color;
+            // Multiply blend
+            frag_color.r = color.r * mask.r;
+            frag_color.g = color.g * mask.g;
+            frag_color.b = color.b * mask.b;
+            frag_color.a = color.a * mask.a;
+
+            gl_FragColor = frag_color;
+        }
+    </script>
+</html>

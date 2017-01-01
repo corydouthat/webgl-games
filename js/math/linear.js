@@ -3,7 +3,8 @@
 
 // SolveCramer2()
 // Solve a linear system of equations in two variable using Cramer's Rule
-function SolveCramer2(A, B, X) {
+function SolveCramer2(A, B, X)
+{
     var det;
     var Ai;
     var det_ai;
@@ -11,7 +12,8 @@ function SolveCramer2(A, B, X) {
     det = mat3.determinant(A);
     // TODO: Check for near-zero
     // Check for zero
-    if (det == 0.0) {
+    if (det == 0.0)
+    {
         X = vec3.fromValues(0.0, 0.0, 0.0);
         return false;
     }
