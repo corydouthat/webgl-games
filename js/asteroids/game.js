@@ -7,6 +7,8 @@ var ship_jet_fg;
 var ship_jet_r_fg;
 var missiles = [];
 var i_missile_mesh;
+var i_asteroid_webgl;
+var i_asteroid_phys;
 
 var Missile = function()
 {
@@ -23,6 +25,7 @@ function SetupGame()
 	// Load textures
 	LoadTexture("res/asteroids/ship.png");
 	LoadTexture("res/asteroids/missile.png");
+	LoadTexture("res/asteroids/asteroid.png");
 
 	// Create Ship
 	// WebGL
@@ -34,9 +37,10 @@ function SetupGame()
 	GetPhysObj(i_ship_phys).meshObj = GetMeshObj(i_ship_webgl);
 	GetPhysObj(i_ship_phys).mass_inv = 1.0;
 	GetPhysObj(i_ship_phys).moment_inv = 1.0;
+	GetPhysObj(i_ship_phys).pos = vec2.fromValues(0.0, -500.0);
 	// Collision box
-	// vec2.fromValues(vec_temp, 98, 84.5);
-	// ship_physics.box = PhysBox(vec_temp);
+	// vec_temp = vec2.fromValues(98, 84.5);
+	// GetPhysObj(i_ship_phys).box = new PhysBox(vec_temp);
 	// Jet force generator
 	ship_jet_fg = new JetFG();
 	ship_jet_fg.thrust = vec2.fromValues(0.0, 1000.0);
@@ -49,6 +53,20 @@ function SetupGame()
 	// Missile mesh
 	i_missile_mesh = AddBoxMesh([20, 20]);
 	GetMesh(i_missile_mesh).texture = textures[1];
+
+	// Asteroid
+	// WebGL
+	i_mesh_temp = AddBoxMesh([200, 200]);
+	GetMesh(i_mesh_temp).texture = textures[2];
+	i_asteroid_webgl = AddMeshObj(i_mesh_temp);
+	// Physics
+	i_asteroid_phys = AddPhysObj();
+	GetPhysObj(i_asteroid_phys).meshObj = GetMeshObj(i_asteroid_webgl);
+	GetPhysObj(i_asteroid_phys).mass_inv = 1.0;
+	GetPhysObj(i_asteroid_phys).moment_inv = 1.0;
+	// Collision circle
+	GetPhysObj(i_asteroid_phys).circle = 180.0;
+	GetPhysObj(i_asteroid_phys).bound_r = 180.0;
 }
 
 function LaunchMissile(ship_phys)
@@ -66,7 +84,7 @@ function LaunchMissile(ship_phys)
 
 	vec2.transformMat3(vel_temp, vel_temp, mat3.fromRotation(mat3.create(),
 		GetPhysObj(i_ship_phys).rot));
-	vec2.scale(vel_temp, vel_temp, 50);
+	vec2.scale(vel_temp, vel_temp, 5000);
 	GetPhysParticle(missile_temp.i_phys_particle).vel = vec2.clone(vel_temp);
 
 	missiles.push(missile_temp);

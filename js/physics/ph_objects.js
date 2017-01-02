@@ -29,16 +29,17 @@ var PhysParticle = function()
 // hs = half-size (vec2)
 var PhysBox = function(hs)
 {
+    this.half_size;                 // half-size (vec2)
+    this.offset = vec2.create();    // Offset from object center (vec2)
+    this.rot = 0;                   // Rotation (float radians)
     if (hs == null)
     {
         this.half_size = vec2.create(); // half-size (vec2)
     }
     else
     {
-        this.half_size = hs; // half-size (vec2)
+        this.half_size = vec2.clone(hs); // half-size (vec2)
     }
-    this.offset = vec2.create();    // Offset from object center (vec2)
-    this.rot = 0;                   // Rotation (float radians)
 }
 
 // AddPhysObj()

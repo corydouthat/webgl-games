@@ -139,6 +139,58 @@ function CheckContactPair(a_obj, b_obj, t)
 
 }
 
+// CheckContactParticleObj()
+// Check for contacts between the designated particle and object over time t
+function CheckContactParticleObj(a_particle, b_obj, t)
+{
+    // TODO: Object validity checks
+    var b_br = b_obj.bound_r;       // Bounding radius B
+    var a_trl = a_particle.vel * t;      // Translation vector A
+    var b_trl = b_obj.vel * t;      // Translation vector B
+    var a_pos0 = a_obj.pos;         // Initial Position A
+    var b_pos0 = b_obj.pos;         // Initial Position B
+    var d0 = b_pos - a_pos;         // Initial distance/Separation from A to B
+
+
+    // Check Bounding Circles
+    if (b_br)
+    {
+        // Rough bounding circles check
+        if (d0 > b_br + vec2.len(a_trl) + vec2.len(b_trl))
+        {
+            return;
+        }
+
+        // TODO: Swept bounding circles check
+
+    }
+
+    // Check Circle
+    if (b_obj.circle)
+    {
+        // TODO: CheckContactParticleCircle(a_particle, b_obj, t);
+        return;
+    }
+
+    // OR
+
+    // Check Box
+    if (b_obj.box)
+    {
+        // TODO: CheckContactParticleBox(a_particle, b_obj, t);
+        return;
+    }
+
+    // OR
+
+    // Check Mesh
+    if (b_obj.mesh)
+    {
+        // TODO: CheckContactParticleMesh(a_particle, b_obj, t);
+        return;
+    }
+
+}
 
 // CheckContactBoxBox()
 // Check for contact(s) between two objects with box collision primitives
@@ -388,6 +440,13 @@ function CheckContactBoxBox(a_obj, b_obj, t)
 
 }
 
+// CheckContactParticleCircle()
+// Check for contact(s) between a particle and a circle collision primitive
+function CheckContactParticleCircle(a_particle, b_obj, t)
+{
+
+}
+
 // CheckIntSegSeg()
 // Check for intersection between two line segments defined by end points
 function CheckIntSegSeg(a0, a1, b0, b1, p)
@@ -431,5 +490,47 @@ function CheckIntSegSeg(a0, a1, b0, b1, p)
         throw("Division by zero in Cramer's Rule");
         p = undefined;
         return false;
+    }
+}
+
+// CheckIntSegCircle()
+// Check for intersection between a line segment and a circle
+// a0, a1 - beginning and end of particle path
+// b0, b1 - beginning and end of circle center path
+// r - radius of circle
+// Return: p - first point of contact
+function CheckIntSegCircle(a0, a1, b0, b1, r, p)
+{
+    // Calculate 'a' path relative to 'b'
+    var a0_rel = a0 - b0;
+    var a1_rel = a1 - b1;
+
+    // Based on MathWorld Circle-Line Intersection Article
+    // http://mathworld.wolfram.com/Circle-LineIntersection.html
+
+    // Line-circle intersection variables
+    var dx = a1_rel[0] - a0_rel[0];
+    var dy = a1_rel[1] - a0_rel[1];
+    var dr = Math.sqrt(dx*dx + dy*dy);
+    var d_mat = mat2.fromValues(a0_rel[0], a0_rel[1], a1_rel[0], a1_rel[1]);
+    var d_det = mat2.determinant(d_mat);
+    var discriminant = r*r * dr*dr - d_det*d_det;
+
+    // Check discriminant
+    if (discriminant < 0.0)
+    {
+        // No intersection
+        p = null;
+        return false;
+    }
+    else if (discriminant == 0.0)
+    {
+        // Tangent case
+        // TODO TODO TODO
+    }
+    else
+    {
+        // Non-tangent (two points of contact)
+        // TODO TODO TODO
     }
 }
