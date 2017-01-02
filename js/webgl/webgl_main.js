@@ -70,7 +70,21 @@ function ResizeWebGL(width, height)
 // Render WebGL scene in the canvas
 function DrawScene()
 {
-    var obj = null;
+	var obj = null;
+
+	// TODO: TEMPORARY BANDAID
+	// Synchronize pos & rot
+	GetMeshObj(i_ship_webgl).pos = vec2.clone(GetPhysObj(i_ship_phys).pos);
+	GetMeshObj(i_ship_webgl).rot = GetPhysObj(i_ship_phys).rot;
+	for (i in missiles)
+	{
+		GetMeshObj(missiles[i].i_mesh_obj).pos =
+			vec2.clone(GetPhysParticle(missiles[i].i_phys_particle).pos);
+		// Set mesh rotation based on particle velocity
+		GetMeshObj(missiles[i].i_mesh_obj).rot = Math. atan2(
+			GetPhysParticle(missiles[i].i_phys_particle).vel[1],
+			GetPhysParticle(missiles[i].i_phys_particle).vel[0]);
+	}
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

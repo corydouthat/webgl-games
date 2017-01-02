@@ -67,9 +67,20 @@ var GravFG = function()
         {
             // Global case (all objects)
             var i, o;
+            // Mesh Objects
             for (i in ph_objects)
             {
                 o = ph_objects[i];
+                // Don't apply gravity if mass is infinite
+                if (o.mass_inv > 0.0)
+                {
+                    o.vel[1] -= this.g * t;    // apply acceleration to 'y' component
+                }
+            }
+            // Particles
+            for (i in ph_particles)
+            {
+                o = ph_particles[i];
                 // Don't apply gravity if mass is infinite
                 if (o.mass_inv > 0.0)
                 {
@@ -109,6 +120,7 @@ var TorqueFG = function(torque)
         {
             // Global case (all objects)
             var i, o;
+            // Mesh objects
             for (i in ph_objects)
             {
                 o = ph_objects[i];
@@ -118,6 +130,7 @@ var TorqueFG = function(torque)
                     o.rot_vel += this.torque * o.moment_inv * t;
                 }
             }
+            // Doesn't apply to particles
         }
     }
 }
@@ -161,14 +174,14 @@ var JetFG = function()
                 // Don't apply force if mass or moment is infinite
                 if (obj.mass_inv > 0.0 && obj.moment_inv > 0.0)
                 {
-                    // TODO
+                    // TODO: offset thrust case
                 }
             }
 
         }
         else if (this.active)
         {
-            // Global case - not defined
+            // TODO: Global case - not defined
         }
     }
 }

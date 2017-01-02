@@ -1,6 +1,9 @@
 // Copyright 2016 Cory Douthat
 "use strict";
 
+var ph_objects = [];
+var ph_particles = [];
+
 var PhysObj = function()
 {
     this.pos = vec2.create();   // Position (vec2)
@@ -36,4 +39,42 @@ var PhysBox = function(hs)
     }
     this.offset = vec2.create();    // Offset from object center (vec2)
     this.rot = 0;                   // Rotation (float radians)
+}
+
+// AddPhysObj()
+// Add a physics object
+function AddPhysObj(ph_obj)
+{
+    if (ph_obj == null)
+    {
+        ph_obj = new PhysObj();
+    }
+
+    return ph_objects.push(ph_obj) - 1;
+}
+
+// AddPhysParticle()
+// Add a physics particle
+function AddPhysParticle(ph_particle)
+{
+    if (ph_particle == null)
+    {
+        ph_particle = new PhysParticle();
+    }
+
+    return ph_particles.push(ph_particle) - 1;
+}
+
+// GetPHysObj()
+// Return physics object by index
+function GetPhysObj(index)
+{
+    return ph_objects[index];
+}
+
+// GetPHysParticle()
+// Return physics particle by index
+function GetPhysParticle(index)
+{
+    return ph_particles[index];
 }

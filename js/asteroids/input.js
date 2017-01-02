@@ -76,10 +76,13 @@ $(window).ready(function(){
                 ship_jet_r_fg.active = true;
                 break;
             case 37:    // Left arrow
-                ship_physics.rot_vel = 2;
+                GetPhysObj(i_ship_phys).rot_vel = 2;
                 break;
             case 39:    // Right arrow
-                ship_physics.rot_vel = -2;
+                GetPhysObj(i_ship_phys).rot_vel = -2;
+                break;
+            case 32:    // Space
+                LaunchMissile(i_ship_phys);
                 break;
         }
     })
@@ -93,10 +96,12 @@ $(window).ready(function(){
                 ship_jet_r_fg.active = false;
                 break;
             case 37:    // Left arrow
-                ship_physics.rot_vel = 0.0;
+                GetPhysObj(i_ship_phys).rot_vel = 0.0;
                 break;
             case 39:    // Right arrow
-                ship_physics.rot_vel = 0.0;
+                GetPhysObj(i_ship_phys).rot_vel = 0.0;
+                break;
+            case 32:    // Space
                 break;
         }
     })
