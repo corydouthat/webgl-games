@@ -502,8 +502,8 @@ function CheckIntSegSeg(a0, a1, b0, b1, p)
 function CheckIntSegCircle(a0, a1, b0, b1, r, p)
 {
     // Calculate 'a' path relative to 'b'
-    var a0_rel = a0 - b0;
-    var a1_rel = a1 - b1;
+    var a0_rel = vec2.subtract(a0_rel, a0, b0);
+    var a1_rel = vec2.subtract(a1_rel, a1, b1);
 
     // Based on MathWorld Circle-Line Intersection Article
     // http://mathworld.wolfram.com/Circle-LineIntersection.html
@@ -515,6 +515,11 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
     var d_mat = mat2.fromValues(a0_rel[0], a0_rel[1], a1_rel[0], a1_rel[1]);
     var d_det = mat2.determinant(d_mat);
     var discriminant = r*r * dr*dr - d_det*d_det;
+    var discr_sqrt;
+    var x_num1, x_num2, y_num1, y_num2;
+    var p1, p2;
+    var dx1, dx2, dy1, dy2;
+    var t;
 
     // Check discriminant
     if (discriminant < 0.0)
@@ -523,14 +528,82 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
         p = null;
         return false;
     }
-    else if (discriminant == 0.0)
-    {
-        // Tangent case
-        // TODO TODO TODO
-    }
     else
     {
-        // Non-tangent (two points of contact)
-        // TODO TODO TODO
+        // Calculate equation parts
+        discr_sqrt = Math.sqrt(discriminant);
+        x_num1 = d_det * dy;
+        if (dy < 0)
+        {
+            x_num2 = dx * discr_sqrt;
+        }
+        else
+        {
+            x_num2 = -dx * discr_sqrt;
+        }
+        y_num1 = -d_det * dx;
+        y_num2 = Math.abs(dy) * discr_sqrt;
+
+        // Final solution(s)
+        if (discriminant == 0.0)
+        {
+            // Tangent case - one solution
+            p[0] = x_num1 / (dr*dr);
+            p[1] = y_num1 / (dr*dr);
+
+            // Back-calculate absolute position
+            // Determine "tiem of intersection"
+            t = vec2.len(vec2.subtract(vec2.create(), p, a0_rel)) /
+                vec2.len(vec2.subtract(vec2.create(), a1_rel, a0, rel));
+
+            // Calculate absolute position
+            vec2.add(p, a0,
+                vec2.scale(vec2.create(),
+                vec2.subtract(vec2.create(), a1, a0),
+                t);
+
+            return true;
+        }
+        else
+        {
+            // Non-tangent - two solutions
+            p1[0] = (x_num1 + x_num2) / (dr*dr);
+            p1[1] = (y_num1 + y_num2) / (dr*dr);
+            p2[0] = (x_num1 - x_num2) / (dr*dr);
+            p2[1] = (y_num1 - y_num2) / (dr*dr);
+
+            // Determine first-occuring solution
+            dx1 = p1[0] - a0_rel[0];
+            dx2 = p2[0] - a0_rel[0];
+            dy1 = p1[1] - a0_rel[1];
+            dy2 = p2[1] - a0_rel[1];
+
+            if (Math.sqrt(dx1*dx1 + dy1*dy1) >= Math.sqrt(dx2*dx2 + dy2*dy2))
+            {
+                // First solution
+                // Calculate "t"
+                t = vec2.len(dx1) / vec2.len(dx);
+                // Calculate absolute position
+                vec2.add(p, a0,
+                    vec2.scale(vec2.create(),
+                    vec2.subtract(vec2.create(), a1, a0),
+                    t);
+
+                return true;
+            }
+            else
+            {
+                // First solution
+                // Calculate "t"
+                t = vec2.len(dx2) / vec2.len(dx);
+                // Calculate absolute position
+                vec2.add(p, a0,
+                    vec2.scale(vec2.create(),
+                    vec2.subtract(vec2.create(), a1, a0),
+                    t);
+
+                return true;
+            }
+        }
     }
 }
