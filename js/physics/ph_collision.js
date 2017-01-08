@@ -1,4 +1,4 @@
-// Copyright 2016 Cory Douthat
+// Copyright 2017 Cory Douthat
 "use strict";
 
 var contacts = [];      // Holds contacts (collisions) for current frame
@@ -28,7 +28,7 @@ function UpdateContacts(t)
     // Reset contacts list
     contacts.splice(0,contacts.length);
 
-    // Check Pairs
+    // Check Object Pairs
     for (i = 0; i < ph_objects.length; i++)
     {
         for (j = i + 1; j < ph_objects.length; j++)
@@ -36,6 +36,17 @@ function UpdateContacts(t)
             a_obj = ph_objects[i];
             b_obj = ph_objects[j];
             CheckContactPair(a_obj, b_obj, t);
+        }
+    }
+
+    // Check particle-obj pairs
+    for (i = 0; i < ph_particles.length; i++)
+    {
+        for (j = 0; j < ph_objects.length; j++)
+        {
+            a_obj = ph_particles[i];
+            b_obj = ph_objects[j];
+            CheckContactParticleObj(a_obj, b_obj, t);
         }
     }
 }
@@ -144,8 +155,9 @@ function CheckContactPair(a_obj, b_obj, t)
 function CheckContactParticleObj(a_particle, b_obj, t)
 {
     // TODO: Object validity checks
+
     var b_br = b_obj.bound_r;       // Bounding radius B
-    var a_trl = a_particle.vel * t;      // Translation vector A
+    var a_trl = a_particle.vel * t; // Translation vector A
     var b_trl = b_obj.vel * t;      // Translation vector B
     var a_pos0 = a_obj.pos;         // Initial Position A
     var b_pos0 = b_obj.pos;         // Initial Position B
@@ -168,7 +180,7 @@ function CheckContactParticleObj(a_particle, b_obj, t)
     // Check Circle
     if (b_obj.circle)
     {
-        // TODO: CheckContactParticleCircle(a_particle, b_obj, t);
+        CheckContactParticleCircle(a_particle, b_obj, t);
         return;
     }
 
@@ -444,7 +456,29 @@ function CheckContactBoxBox(a_obj, b_obj, t)
 // Check for contact(s) between a particle and a circle collision primitive
 function CheckContactParticleCircle(a_particle, b_obj, t)
 {
+    var a0, a1, b0, b1, p;
+    var temp_contact;
+    // Calculate begin and end points
+    a0 = vec2.clone(a_particle.pos);
+    b0 = vec2.clone(b_obj.pos);
+    vec2.add(a1, a_particle.pos, vec2.scale(vec2.create(), a_particle.vel, t));
+    vec2.add(b1, b_obj,pos, vec2.scale(vec2.create(), b_obj.vel, t));
 
+    if (CheckIntSegCircle(a0, a1, b0, b1, b_obj.circle, p))
+    {
+        temp_contact = new contact;
+        temp_contact.a = a_particle;
+        temp_contact.b = b_obj;
+        temp_contact.points.push(p.clone);
+
+        contacts.push(temp_contact);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 // CheckIntSegSeg()

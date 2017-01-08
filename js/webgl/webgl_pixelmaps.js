@@ -1,4 +1,4 @@
-// Copyright 2016 Cory Douthat
+// Copyright 2017 Cory Douthat
 "use strict";
 
 var pixelmap_objs = [];                 // Array of pixelmap objects

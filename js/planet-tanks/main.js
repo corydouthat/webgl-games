@@ -1,15 +1,15 @@
-// Copyright 2016 Cory Douthat
+// Copyright 2017 Cory Douthat
 "use strict";
 
 var draw_interval_id;
 var canvas;
 
-function main(canvas_id) 
+function main(canvas_id)
 {
 	canvas = document.getElementById(canvas_id);
-	
+
 	// Initialize WebGL
-	if (!InitWebGL(canvas)) 
+	if (!InitWebGL(canvas))
 	{
         throw("Failed to initialize WebGL");
     }
@@ -27,7 +27,7 @@ function main(canvas_id)
 
 // ResizeCanvas()
 // Resize WebGL canvas
-function ResizeCanvas() 
+function ResizeCanvas()
 {
 	// Resize canvas element (fill screen)
 	canvas.width = $(document).width();
