@@ -583,6 +583,8 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
         y_num1 = -d_det * dx;
         y_num2 = Math.abs(dy) * discr_sqrt;
 
+        // TODO: Check if collision is within segment length (below)
+
         // Final solution(s)
         if (discriminant == 0.0)
         {
@@ -595,13 +597,22 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
             t = vec2.len(vec2.subtract(vec2.create(), p, a0_rel)) /
                 vec2.len(vec2.subtract(vec2.create(), a1_rel, a0, rel));
 
-            // Calculate absolute position
-            vec2.add(p, a0,
-                vec2.scale(vec2.create(),
-                vec2.subtract(vec2.create(), a1, a0),
-                t));
+            // Check if contact is within time step
+            if (t >= 0 && t <= 1)
+            {
+                // Calculate absolute position
+                vec2.add(p, a0,
+                    vec2.scale(vec2.create(),
+                    vec2.subtract(vec2.create(), a1, a0),
+                    t));
 
-            return true;
+                return true;
+            }
+            else
+            {
+                p = null;
+                return false;
+            }
         }
         else
         {
@@ -622,26 +633,46 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
                 // First solution
                 // Calculate "t"
                 t = vec2.len(dx1) / vec2.len(dx);
-                // Calculate absolute position
-                vec2.add(p, a0,
-                    vec2.scale(vec2.create(),
-                    vec2.subtract(vec2.create(), a1, a0),
-                    t));
 
-                return true;
+                // Check if contact is within time step
+                if (t >= 0 && t <= 1)
+                {
+                    // Calculate absolute position
+                    vec2.add(p, a0,
+                        vec2.scale(vec2.create(),
+                        vec2.subtract(vec2.create(), a1, a0),
+                        t));
+
+                    return true;
+                }
+                else
+                {
+                    p = null;
+                    return false;
+                }
             }
             else
             {
                 // First solution
                 // Calculate "t"
                 t = vec2.len(dx2) / vec2.len(dx);
-                // Calculate absolute position
-                vec2.add(p, a0,
-                    vec2.scale(vec2.create(),
-                    vec2.subtract(vec2.create(), a1, a0),
-                    t));
 
-                return true;
+                // Check if contact is within time step
+                if (t >= 0 && t <= 1)
+                {
+                    // Calculate absolute position
+                    vec2.add(p, a0,
+                        vec2.scale(vec2.create(),
+                        vec2.subtract(vec2.create(), a1, a0),
+                        t));
+
+                    return true;
+                }
+                else
+                {
+                    p = null;
+                    return false;
+                }
             }
         }
     }
