@@ -29,6 +29,7 @@ function UpdateContacts(t)
     contacts.splice(0,contacts.length);
 
     // Check Object Pairs
+
     for (i = 0; i < ph_objects.length; i++)
     {
         for (j = i + 1; j < ph_objects.length; j++)
@@ -62,7 +63,7 @@ function CheckContactPair(a_obj, b_obj, t)
     var b_trl = b_obj.vel * t;      // Translation vector B
     var a_pos0 = a_obj.pos;         // Initial Position A
     var b_pos0 = b_obj.pos;         // Initial Position B
-    var d0 = b_pos - a_pos;         // Initial distance/Separation from A to B
+    var d0 = b_pos0 - a_pos0;       // Initial distance/separation from A to B
 
 
     // Check Bounding Circles
@@ -159,9 +160,9 @@ function CheckContactParticleObj(a_particle, b_obj, t)
     var b_br = b_obj.bound_r;       // Bounding radius B
     var a_trl = a_particle.vel * t; // Translation vector A
     var b_trl = b_obj.vel * t;      // Translation vector B
-    var a_pos0 = a_obj.pos;         // Initial Position A
+    var a_pos0 = a_particle.pos;    // Initial Position A
     var b_pos0 = b_obj.pos;         // Initial Position B
-    var d0 = b_pos - a_pos;         // Initial distance/Separation from A to B
+    var d0 = b_pos0 - a_pos0;         // Initial distance/Separation from A to B
 
 
     // Check Bounding Circles
@@ -457,12 +458,15 @@ function CheckContactBoxBox(a_obj, b_obj, t)
 function CheckContactParticleCircle(a_particle, b_obj, t)
 {
     var a0, a1, b0, b1, p;
+    var a1 = vec2.create();
+    var b1 = vec2.create();
+    var p = vec2.create();
     var temp_contact;
     // Calculate begin and end points
     a0 = vec2.clone(a_particle.pos);
     b0 = vec2.clone(b_obj.pos);
     vec2.add(a1, a_particle.pos, vec2.scale(vec2.create(), a_particle.vel, t));
-    vec2.add(b1, b_obj,pos, vec2.scale(vec2.create(), b_obj.vel, t));
+    vec2.add(b1, b_obj.pos, vec2.scale(vec2.create(), b_obj.vel, t));
 
     if (CheckIntSegCircle(a0, a1, b0, b1, b_obj.circle, p))
     {
@@ -536,8 +540,8 @@ function CheckIntSegSeg(a0, a1, b0, b1, p)
 function CheckIntSegCircle(a0, a1, b0, b1, r, p)
 {
     // Calculate 'a' path relative to 'b'
-    var a0_rel = vec2.subtract(a0_rel, a0, b0);
-    var a1_rel = vec2.subtract(a1_rel, a1, b1);
+    var a0_rel = vec2.subtract(vec2.create(), a0, b0);
+    var a1_rel = vec2.subtract(vec2.create(), a1, b1);
 
     // Based on MathWorld Circle-Line Intersection Article
     // http://mathworld.wolfram.com/Circle-LineIntersection.html
@@ -551,7 +555,8 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
     var discriminant = r*r * dr*dr - d_det*d_det;
     var discr_sqrt;
     var x_num1, x_num2, y_num1, y_num2;
-    var p1, p2;
+    var p1 = vec2.create();
+    var p2 = vec2.create();
     var dx1, dx2, dy1, dy2;
     var t;
 
@@ -594,7 +599,7 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
             vec2.add(p, a0,
                 vec2.scale(vec2.create(),
                 vec2.subtract(vec2.create(), a1, a0),
-                t);
+                t));
 
             return true;
         }
@@ -621,7 +626,7 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
                 vec2.add(p, a0,
                     vec2.scale(vec2.create(),
                     vec2.subtract(vec2.create(), a1, a0),
-                    t);
+                    t));
 
                 return true;
             }
@@ -634,7 +639,7 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
                 vec2.add(p, a0,
                     vec2.scale(vec2.create(),
                     vec2.subtract(vec2.create(), a1, a0),
-                    t);
+                    t));
 
                 return true;
             }

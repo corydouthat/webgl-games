@@ -9,7 +9,7 @@ function UpdatePhysics(t)
 
     // Contact Detection
     // TODO: Contact detection may have errors
-    //UpdateContacts(t);
+    UpdateContacts(t);
 
     // TODO: Resolve Contacts
 
