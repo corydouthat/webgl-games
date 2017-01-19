@@ -628,11 +628,14 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
             dy1 = p1[1] - a0_rel[1];
             dy2 = p2[1] - a0_rel[1];
 
-            if (Math.sqrt(dx1*dx1 + dy1*dy1) >= Math.sqrt(dx2*dx2 + dy2*dy2))
+            // TODO: do t calculations first and use to check for first-occurring
+            // TODO: re-use length calculations for efficiency
+
+            if ((dx1*dx1 + dy1*dy1) <= (dx2*dx2 + dy2*dy2))
             {
-                // First solution
+                // First-occuring solution is '1'
                 // Calculate "t"
-                t = vec2.len(dx1) / vec2.len(dx);
+                t = Math.sqrt(dx1*dx1 + dy1*dy1) / Math.sqrt(dx*dx + dy*dy);
 
                 // Check if contact is within time step
                 if (t >= 0 && t <= 1)
@@ -653,9 +656,9 @@ function CheckIntSegCircle(a0, a1, b0, b1, r, p)
             }
             else
             {
-                // First solution
+                // First-occuring solution is '2'
                 // Calculate "t"
-                t = vec2.len(dx2) / vec2.len(dx);
+                t = Math.sqrt(dx2*dx2 + dy2*dy2) / Math.sqrt(dx*dx + dy*dy);
 
                 // Check if contact is within time step
                 if (t >= 0 && t <= 1)
