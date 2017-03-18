@@ -24,6 +24,9 @@ var PhysParticle = function()
     this.pos = vec2.create();   // Position (vec2)
     this.mass_inv = 0.0;        // Inverse mass (float)
     this.vel = vec2.create();   // Velocity (vec2)
+    // flags
+    this.dead = false;          // Tells UpdateMotion() to delete particle
+    this.delete_on_contact = false; // Delete on contact
 }
 
 // hs = half-size (vec2)

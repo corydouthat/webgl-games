@@ -74,14 +74,18 @@ function LaunchMissile(ship_phys)
 	var missile_temp = new Missile();
 	var vel_temp = vec2.fromValues(0.0, 1.0);
 
+    // Set up missile mesh
 	missile_temp.i_mesh_obj = AddMeshObj(i_missile_mesh);
+    // Set up missile physics
 	missile_temp.i_phys_particle = AddPhysParticle();
 	GetPhysParticle(missile_temp.i_phys_particle).mass_inv = 1.0;
 	GetPhysParticle(missile_temp.i_phys_particle).pos =
 		vec2.clone(GetPhysObj(i_ship_phys).pos);
 	GetPhysParticle(missile_temp.i_phys_particle).rot =
 		GetPhysObj(i_ship_phys).rot;
+    GetPhysParticle(missile_temp.i_phys_particle).delete_on_contact = true;
 
+    // Initial position and rotation
 	vec2.transformMat3(vel_temp, vel_temp, mat3.fromRotation(mat3.create(),
 		GetPhysObj(i_ship_phys).rot));
 	vec2.scale(vel_temp, vel_temp, 5000);
